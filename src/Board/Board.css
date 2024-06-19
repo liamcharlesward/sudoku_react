@@ -1,0 +1,32 @@
+#sudoku-table {
+  border-radius: 5%;
+}
+
+#sudoku-table,
+td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+td {
+  width: 50px;
+  height: 50px;
+  text-align: center;
+}
+
+.filled-cell {
+  background-color: #f0f0f0;
+}
+
+td:not(.filled-cell):hover {
+  cursor: pointer;
+  background-color: #f0f0ff;
+}
+
+.border-right {
+  border-right: 2px solid black;
+}
+
+.border-bottom {
+  border-bottom: 2px solid black;
+}
