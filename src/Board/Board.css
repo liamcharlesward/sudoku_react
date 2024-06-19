@@ -1,7 +1,3 @@
-#sudoku-table {
-  border-radius: 5%;
-}
-
 #sudoku-table,
 td {
   border: 1px solid #727272;
@@ -25,14 +21,6 @@ td:not(.filled-cell):hover {
 
 .selected-cell {
   background-color: #f0f0ff;
-}
-
-.border-right {
-  border-right: 2px solid black;
-}
-
-.border-bottom {
-  border-bottom: 2px solid black;
 }
 
 td:nth-child(3),

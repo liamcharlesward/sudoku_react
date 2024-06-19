@@ -3,7 +3,7 @@ import "./App.css";
 import { Board } from "./Board/Board";
 import { useState, useEffect } from "react";
 
-type SudokuBoard = (number | null)[][];
+export type SudokuBoard = (number | null)[][];
 
 function App() {
   // State variables
@@ -85,7 +85,6 @@ function App() {
         return false;
       }
     }
-    // Check sub-grids
     // Check the 3x3 subgrid
     let startRow = row - (row % 3);
     let startCol = col - (col % 3);
@@ -96,8 +95,7 @@ function App() {
         }
       }
     }
-
-    return true;
+    return true; // Fall-through: all checks are passed. Placement is valid
   }
 
   function showSolution() {
@@ -125,4 +123,3 @@ function App() {
 }
 
 export default App;
-export type { SudokuBoard };
