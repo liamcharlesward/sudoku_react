@@ -10,9 +10,9 @@ function Board(props: BoardProps) {
           {row.map((cell, cellIndex) => (
             <td
               key={`${rowIndex}-${cellIndex}`}
-              className={clsx(cell === null ? "" : "filled-cell")}
+              className={clsx(cell !== null && "filled-cell")}
             >
-              {cell === null ? "" : cell}
+              {cell}
             </td>
           ))}
         </tr>
