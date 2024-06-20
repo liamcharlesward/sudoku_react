@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import "./App.css";
-import { Board } from "./Board/Board";
+import { Board } from "./Components/Board/Board";
 import { useState, useEffect } from "react";
 
 export type SudokuBoard = (number | null)[][];
@@ -100,6 +100,7 @@ function App() {
 
   function showSolution() {
     // TODO: Use a proper modal instead of a browser dialog
+    // FIXME: Selected cells are not cleared when the solution is shown
     // eslint-disable-next-line no-restricted-globals
     if (confirm("Are you sure you want to see the solution?")) {
       setGameBoard(solvedGameBoard);
@@ -113,7 +114,7 @@ function App() {
   return (
     <div className="App">
       <h1>Sudoku game</h1>
-      <Board board={gameBoard} />
+      <Board board={gameBoard} setBoard={setGameBoard} />
       <div id="button-row">
         <button onClick={() => newPuzzle()}>New Game</button>
         <button onClick={() => showSolution()}>Show solution</button>
