@@ -9,6 +9,7 @@ function App() {
   // State variables
   const [gameBoard, setGameBoard] = useState<SudokuBoard>([]);
   const [solvedGameBoard, setSolvedGameBoard] = useState<SudokuBoard>([]);
+  const [boardKey, setBoardKey] = useState(1);
 
   function newPuzzle() {
     // Create a 9x9 array to represent the board
@@ -31,6 +32,7 @@ function App() {
     setSolvedGameBoard(board);
     // Remove numbers from each row to generate a puzzle
     setGameBoard(removeValues(board));
+    setBoardKey(boardKey + 1);
   }
 
   function generateSolution(board: SudokuBoard) {
@@ -104,6 +106,7 @@ function App() {
     // eslint-disable-next-line no-restricted-globals
     if (confirm("Are you sure you want to see the solution?")) {
       setGameBoard(solvedGameBoard);
+      setBoardKey(boardKey + 1);
     }
   }
 
@@ -114,9 +117,16 @@ function App() {
   return (
     <div className="App">
       <h1>Sudoku game</h1>
-      <Board board={gameBoard} setBoard={setGameBoard} />
+      <Board board={gameBoard} setBoard={setGameBoard} key={boardKey} />
       <div id="button-row">
-        <button onClick={() => newPuzzle()}>New Game</button>
+        <button onClick={() => newPuzzle()}>New game</button>
+        <button
+          onClick={() => {
+            setBoardKey(boardKey + 1);
+          }}
+        >
+          Restart puzzle
+        </button>
         <button onClick={() => showSolution()}>Show solution</button>
       </div>
     </div>
