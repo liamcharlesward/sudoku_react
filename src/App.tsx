@@ -8,6 +8,7 @@ import { Modal } from "./Components/Modal/Modal";
 export type SudokuBoard = (number | null)[][];
 
 function App() {
+  // A change purely to check if git commit signing is working
   // State variables
   const [gameBoard, setGameBoard] = useState<SudokuBoard>([]);
   const [solvedGameBoard, setSolvedGameBoard] = useState<SudokuBoard>([]);
