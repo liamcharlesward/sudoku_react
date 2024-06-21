@@ -1,7 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import "./App.css";
 import { Board } from "./Components/Board/Board";
+import { Button } from "./Components/Button/Button";
 import { useState, useEffect } from "react";
+import { Modal } from "./Components/Modal/Modal";
 
 export type SudokuBoard = (number | null)[][];
 
@@ -10,6 +12,16 @@ function App() {
   const [gameBoard, setGameBoard] = useState<SudokuBoard>([]);
   const [solvedGameBoard, setSolvedGameBoard] = useState<SudokuBoard>([]);
   const [boardKey, setBoardKey] = useState(1);
+  const [showModal, setShowModal] = useState(false);
+
+  const [modalContents, setModalContents] = useState<{
+    title: string;
+    body: string;
+    buttons?: { text: string; onClick: () => void }[];
+  }>({
+    title: "Modal",
+    body: "Modal content",
+  });
 
   function newPuzzle() {
     // Create a 9x9 array to represent the board
@@ -32,7 +44,7 @@ function App() {
     setSolvedGameBoard(board);
     // Remove numbers from each row to generate a puzzle
     setGameBoard(removeValues(board));
-    setBoardKey(boardKey + 1);
+    refreshBoard();
   }
 
   function generateSolution(board: SudokuBoard) {
@@ -101,13 +113,40 @@ function App() {
   }
 
   function showSolution() {
-    // TODO: Use a proper modal instead of a browser dialog
-    // FIXME: Selected cells are not cleared when the solution is shown
-    // eslint-disable-next-line no-restricted-globals
-    if (confirm("Are you sure you want to see the solution?")) {
-      setGameBoard(solvedGameBoard);
-      setBoardKey(boardKey + 1);
+    setGameBoard(solvedGameBoard);
+    refreshBoard();
+  }
+
+  function refreshBoard() {
+    setBoardKey(boardKey + 1);
+    setShowModal(false);
+  }
+
+  function displayModal(purpose: "new" | "restart" | "solution") {
+    switch (purpose) {
+      case "new":
+        setModalContents({
+          title: "New puzzle",
+          body: "Are you sure you want to generate a new puzzle?",
+          buttons: [{ text: "Yes", onClick: newPuzzle }],
+        });
+        break;
+      case "restart":
+        setModalContents({
+          title: "Restart puzzle",
+          body: "Are you sure you want to restart the puzzle?",
+          buttons: [{ text: "Yes", onClick: refreshBoard }],
+        });
+        break;
+      case "solution":
+        setModalContents({
+          title: "Restart puzzle",
+          body: "Are you sure you want to see the puzzle's solution?",
+          buttons: [{ text: "Yes", onClick: showSolution }],
+        });
+        break;
     }
+    setShowModal(true);
   }
 
   useEffect(() => {
@@ -117,18 +156,19 @@ function App() {
   return (
     <div className="App">
       <h1>Sudoku game</h1>
-      <Board board={gameBoard} setBoard={setGameBoard} key={boardKey} />
+      <Board board={gameBoard} key={boardKey} />
       <div id="button-row">
-        <button onClick={() => newPuzzle()}>New game</button>
-        <button
-          onClick={() => {
-            setBoardKey(boardKey + 1);
-          }}
-        >
-          Restart puzzle
-        </button>
-        <button onClick={() => showSolution()}>Show solution</button>
+        <Button onClick={() => displayModal("new")} text="New puzzle" />
+        <Button onClick={() => displayModal("restart")} text="Restart puzzle" />
+        <Button onClick={() => displayModal("solution")} text="Show solution" />
       </div>
+      <Modal
+        onClose={() => setShowModal(false)}
+        show={showModal}
+        title={modalContents.title}
+        contents={modalContents.body}
+        buttons={modalContents.buttons}
+      />
     </div>
   );
 }
