@@ -12,15 +12,16 @@ function App() {
   const [gameBoard, setGameBoard] = useState<SudokuBoard>([]);
   const [solvedGameBoard, setSolvedGameBoard] = useState<SudokuBoard>([]);
   const [boardKey, setBoardKey] = useState(1);
-  const [showModal, setShowModal] = useState(false);
+  const [modalShown, setModalShown] = useState(false);
+  const [solutionShown, setSolutionShown] = useState(false);
 
   const [modalContents, setModalContents] = useState<{
     title: string;
     body: string;
     buttons?: { text: string; onClick: () => void }[];
   }>({
-    title: "Modal",
-    body: "Modal content",
+    title: "Default modal",
+    body: "The modal has been shown without content being specified. Weird.",
   });
 
   function newPuzzle() {
@@ -45,6 +46,7 @@ function App() {
     // Remove numbers from each row to generate a puzzle
     setGameBoard(removeValues(board));
     refreshBoard();
+    setSolutionShown(false);
   }
 
   function generateSolution(board: SudokuBoard) {
@@ -115,14 +117,15 @@ function App() {
   function showSolution() {
     setGameBoard(solvedGameBoard);
     refreshBoard();
+    setSolutionShown(true);
   }
 
   function refreshBoard() {
     setBoardKey(boardKey + 1);
-    setShowModal(false);
+    setModalShown(false);
   }
 
-  function displayModal(purpose: "new" | "restart" | "solution") {
+  function showModal(purpose: "new" | "restart" | "solution") {
     switch (purpose) {
       case "new":
         setModalContents({
@@ -146,7 +149,7 @@ function App() {
         });
         break;
     }
-    setShowModal(true);
+    setModalShown(true);
   }
 
   useEffect(() => {
@@ -158,13 +161,28 @@ function App() {
       <h1>Sudoku game</h1>
       <Board board={gameBoard} key={boardKey} />
       <div id="button-row">
-        <Button onClick={() => displayModal("new")} text="New puzzle" />
-        <Button onClick={() => displayModal("restart")} text="Restart puzzle" />
-        <Button onClick={() => displayModal("solution")} text="Show solution" />
+        <Button
+          onClick={() => {
+            solutionShown ? newPuzzle() : showModal("new");
+          }}
+          text="New puzzle"
+        />
+        {!solutionShown && (
+          <>
+            <Button
+              onClick={() => showModal("restart")}
+              text="Restart puzzle"
+            />
+            <Button
+              onClick={() => showModal("solution")}
+              text="Show solution"
+            />
+          </>
+        )}
       </div>
       <Modal
-        onClose={() => setShowModal(false)}
-        show={showModal}
+        onClose={() => setModalShown(false)}
+        show={modalShown}
         title={modalContents.title}
         contents={modalContents.body}
         buttons={modalContents.buttons}
