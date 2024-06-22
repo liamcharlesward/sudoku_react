@@ -5,17 +5,15 @@ import { Button } from "./Components/Button/Button";
 import { useState, useEffect } from "react";
 import { Modal } from "./Components/Modal/Modal";
 
-export type SudokuBoard = (number | null)[][];
-
 function App() {
-  // A change purely to check if git commit signing is working
   // State variables
-  const [gameBoard, setGameBoard] = useState<SudokuBoard>([]);
-  const [solvedGameBoard, setSolvedGameBoard] = useState<SudokuBoard>([]);
+  const [gameBoard, setGameBoard] = useState<(number | null)[][]>([]);
+  const [solvedGameBoard, setSolvedGameBoard] = useState<(number | null)[][]>(
+    []
+  );
   const [boardKey, setBoardKey] = useState(1);
   const [modalShown, setModalShown] = useState(false);
   const [solutionShown, setSolutionShown] = useState(false);
-
   const [modalContents, setModalContents] = useState<{
     title: string;
     body: string;
@@ -50,7 +48,7 @@ function App() {
     setSolutionShown(false);
   }
 
-  function generateSolution(board: SudokuBoard) {
+  function generateSolution(board: (number | null)[][]) {
     for (let row = 0; row < 9; row++) {
       for (let col = 0; col < 9; col++) {
         // Find an empty cell
@@ -74,8 +72,8 @@ function App() {
     return true; // Board is completely filled
   }
 
-  function removeValues(solvedBoard: SudokuBoard) {
-    let board: SudokuBoard = solvedBoard.map((row) => row.slice());
+  function removeValues(solvedBoard: (number | null)[][]) {
+    let board: (number | null)[][] = solvedBoard.map((row) => row.slice());
     board.forEach((row) => {
       let keptIndices: number[] = [];
       for (let i = 0; i < 5; i++) {
@@ -89,7 +87,12 @@ function App() {
     return board;
   }
 
-  function isValid(board: SudokuBoard, row: number, col: number, num: number) {
+  function isValid(
+    board: (number | null)[][],
+    row: number,
+    col: number,
+    num: number
+  ) {
     // Check rows
     for (let i = 0; i < 9; i++) {
       if (board[row][i] === num) {
@@ -144,7 +147,7 @@ function App() {
         break;
       case "solution":
         setModalContents({
-          title: "Restart puzzle",
+          title: "Show solution",
           body: "Are you sure you want to see the puzzle's solution?",
           buttons: [{ text: "Yes", onClick: showSolution }],
         });
